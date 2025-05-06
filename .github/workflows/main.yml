@@ -14,7 +14,7 @@ jobs:
     needs: [deploy-and-test]
     if: ${{ needs.deploy-and-test.result == 'success' }}
     steps:
-      - run: exit 1  # use 0 to test success
+      - run: exit 0  # use 1 to test failure
 
   resume-flux:
     name: Resume Flux (Inline)
