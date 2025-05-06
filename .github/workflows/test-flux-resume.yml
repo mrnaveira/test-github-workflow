@@ -3,12 +3,11 @@ name: Resume Flux on Cancel
 on:
   workflow_run:
     workflows: ["Main Workflow"]
-    types:
-      - completed
+    types: [completed]
 
 jobs:
   resume-flux:
     if: ${{ github.event.workflow_run.conclusion == 'cancelled' }}
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Detected cancelled main workflow. Resuming flux actions..."
+    uses: ./.github/workflows/resume-flux.yml
+    with:
+      reason: "workflow_run: main workflow was cancelled"

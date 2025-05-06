@@ -7,11 +7,22 @@ jobs:
   deploy-and-test:
     runs-on: ubuntu-latest
     steps:
-      - run: sleep 120  # enough time to cancel manually
+      - run: sleep 60  # enough time to cancel manually
 
   merge-pr-on-dispatch-success:
     runs-on: ubuntu-latest
     needs: [deploy-and-test]
     if: ${{ needs.deploy-and-test.result == 'success' }}
     steps:
-      - run: exit 1  # fail deliberately for testing
+      - run: exit 0  # use 1 to test failure
+
+  resume-flux:
+    name: Resume Flux (Inline)
+    runs-on: ubuntu-latest
+    needs: [merge-pr-on-dispatch-success]
+    if: always()
+    steps:
+      - name: Resume Flux Logic
+        run: |
+          echo "Running inline resume-flux in main workflow"
+          echo "merge-pr-on-dispatch-success result: ${{ needs.merge-pr-on-dispatch-success.result }}"

@@ -1,0 +1,16 @@
+name: Resume Flux
+
+on:
+  workflow_call:  # This allows other workflows to call it
+    inputs:
+      reason:
+        required: true
+        type: string
+
+jobs:
+  resume:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Resume Flux Logic
+        run: |
+          echo "Resuming Flux: reason = ${{ inputs.reason }}"
