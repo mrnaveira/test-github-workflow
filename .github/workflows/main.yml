@@ -18,11 +18,8 @@ jobs:
 
   resume-flux:
     name: Resume Flux (Inline)
-    runs-on: ubuntu-latest
     needs: [merge-pr-on-dispatch-success]
     if: always()
-    steps:
-      - name: Resume Flux Logic
-        run: |
-          echo "Running inline resume-flux in main workflow"
-          echo "merge-pr-on-dispatch-success result: ${{ needs.merge-pr-on-dispatch-success.result }}"
+    uses: ./.github/workflows/resume-flux.yml
+    with:
+      reason: "main workflow: merge-pr completed (success/failure/cancelled)"
