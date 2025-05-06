@@ -6,11 +6,20 @@ on:
       reason:
         required: true
         type: string
+      delay_seconds:
+        required: false
+        type: number
+        default: 0
 
 jobs:
   resume:
     runs-on: ubuntu-latest
     steps:
+      - name: Wait for Git to update (optional delay)
+        if: ${{ inputs.delay_seconds > 0 }}
+        run: |
+          echo "Waiting for Git repository to update..."
+          sleep ${{ inputs.delay_seconds }}
       - name: Resume Flux Logic
         run: |
           echo "Resuming Flux: reason = ${{ inputs.reason }}"

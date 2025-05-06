@@ -23,3 +23,4 @@ jobs:
     uses: ./.github/workflows/resume-flux.yml
     with:
       reason: "main workflow: merge-pr completed (success/failure/cancelled)"
+      delay_seconds: 60
