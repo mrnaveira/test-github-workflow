@@ -1,0 +1,17 @@
+name: Main Workflow
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: sleep 120  # enough time to cancel manually
+
+  merge-pr-on-dispatch-success:
+    runs-on: ubuntu-latest
+    needs: [deploy-and-test]
+    if: ${{ needs.deploy-and-test.result == 'success' }}
+    steps:
+      - run: exit 1  # fail deliberately for testing

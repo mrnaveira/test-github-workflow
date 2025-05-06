@@ -1,43 +1,14 @@
-name: Test Flux Resume Workflow
+name: Resume Flux on Cancel
 
 on:
-  workflow_dispatch:
+  workflow_run:
+    workflows: ["Main Workflow"]
+    types:
+      - completed
 
 jobs:
-  deploy-and-test:
-    name: Deploy and Test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Simulate long-running deploy
-        run: |
-          echo "Starting deploy-and-test..."
-          sleep 120  # You can cancel during this to test cancellation
-          echo "Deploy-and-test completed successfully."
-
-  merge-pr-on-dispatch-success:
-    name: Merge PR on Dispatch Success
-    runs-on: ubuntu-latest
-    needs: [deploy-and-test]
-    if: ${{ needs.deploy-and-test.result == 'success' }}
-    steps:
-      - name: Simulate PR merge
-        run: |
-          echo "Merging PR because deploy succeeded..."
-          # Simulate either success or failure here
-          exit 1  # Change to 0 to simulate success
-
   resume-flux:
-    name: Resume Flux
+    if: ${{ github.event.workflow_run.conclusion == 'cancelled' }}
     runs-on: ubuntu-latest
-    needs:
-      - deploy-and-test
-      - merge-pr-on-dispatch-success
-    if: |
-      needs.deploy-and-test.result == 'cancelled' ||
-      needs.merge-pr-on-dispatch-success.result != 'skipped'
     steps:
-      - name: Resume Logic
-        run: |
-          echo "=== RESUMING FLUX ==="
-          echo "deploy-and-test result: ${{ needs.deploy-and-test.result }}"
-          echo "merge-pr-on-dispatch-success result: ${{ needs.merge-pr-on-dispatch-success.result }}"
+      - run: echo "Detected cancelled main workflow. Resuming flux actions..."
